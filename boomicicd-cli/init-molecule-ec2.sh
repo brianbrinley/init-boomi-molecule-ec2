@@ -10,6 +10,8 @@ properties () {
     export LOCALWORKINGDIR=/boomi/local/work
     # Local Boomi working directory ... will be created as a part of the automation
     export LOCALTEMPDIR=/boomi/local/tmp
+    # Local Container working directory used for local jar file copies... will be created as a part of the automation
+    export LOCALCONTAINERDIR=/boomi/local/container
     # Local Boomi temp directory ... will be created as a part of the automation
     export LOCALJAVADIR=/apps/products/jdk
     # Local Boomi JDK directory ... will be created as a part of the automation
@@ -232,7 +234,10 @@ installMolecule () {
     then 
         echo "com.boomi.container.resource.heapDumpOnLowMemory=true" | sudo tee -a $ATOM_HOME/conf/container.properties
     fi
-
+    if [ $LOCALCONTAINERDIR > '' ]
+    then 
+        echo "-Dcom.boomi.container.localWorkDir="$LOCALCONTAINERDIR | sudo tee -a $ATOM_HOME/bin/atom.vmoptions
+    fi
     sudo ${ATOM_HOME}/bin/atom restart
 
 }
